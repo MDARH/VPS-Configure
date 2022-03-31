@@ -4,6 +4,7 @@
   - [Create Swap Memory](#create-swap-memory)
     - [Activate the swap partition permanently](#activate-the-swap-partition-permanently)
   - [Domain Add to Apache](#domain-add-to-apache)
+  - [DATABASES](#databases)
     - [Create Database](#create-database)
     - [Create Databse User](#create-databse-user)
     - [Database Backup & Restore](#database-backup--restore)
@@ -78,8 +79,8 @@ sudo a2dissite 000-default.conf
 sudo systemctl restart apache2
 sudo systemctl status apache2
 
-##DATABASES
-
+## DATABASES
+We can access database via command without phpmyadmin.
 ### Create Database
 To enter mysql, type:
 ```
