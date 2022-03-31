@@ -1,22 +1,21 @@
 # VPS-Configure Ubuntu 20.04
 
 - [VPS-Configure Ubuntu 20.04](#vps-configure-ubuntu-2004)
-  - [Create Swam Memory](#create-swam-memory)
+  - [Create Swap Memory](#create-swap-memory)
     - [Activate the swap partition permanently](#activate-the-swap-partition-permanently)
-    - [Changing the swappiness value](#changing-the-swappiness-value)
   - [Domain Add to Apache](#domain-add-to-apache)
-  - [Create Database](#create-database)
-  - [Create Databse User](#create-databse-user)
-  - [Database Backup & Restore](#database-backup--restore)
-  - [Database Auto Backup](#database-auto-backup)
+    - [Create Database](#create-database)
+    - [Create Databse User](#create-databse-user)
+    - [Database Backup & Restore](#database-backup--restore)
+    - [Database Auto Backup](#database-auto-backup)
+  - [Email Setup](#email-setup)
 
-
-## Create Swam Memory
-At first, you need to check if your system already has a swap space. Access your server with an SSH client and write the following command.
+## Create Swap Memory
+To check swap memory:
 ```
 free -m
 ```
-Now, let’s create the swap file. I’m going to create a 4GB file. However, you may change it depending on your needs. The common practice is that the swap file size should be half to the physical memory. But, it should not be more than 4GB.
+Now, let’s create 4GB swap file:
 ```
 sudo dd if=/dev/zero of=/swap count=4096 bs=1MiB
 ```
@@ -33,19 +32,21 @@ Now enable the swap partition:
 sudo swapon /swap
 ```
 The swap partition is created, and it’s running correctly. But, the partition will not automatically be activated if you reboot the system.
+
 ### Activate the swap partition permanently
+To make the swap partition automatically mounted after each reboot, execute the following command to add it to your system’s fstab config.
 ```
 sudo echo "/swap swap swap sw 0 0" >> /etc/fstab
 ```
-Check the current swappiness value
+To check the current swappiness value:
 ```
 cat /proc/sys/vm/swappiness
 ```
-We can check the swappiness value with another command, and that is:
+We can check the swappiness value with another command:
 ```
 sysctl vm.swappiness
 ```
-### Changing the swappiness value
+Change the swappiness value:
 ```
 sudo sysctl vm.swappiness=1
 ```
@@ -55,11 +56,6 @@ sudo nano /etc/sysctl.conf
 ```
 
 ## Domain Add to Apache
-## Create Database
-## Create Databse User
-## Database Backup & Restore
-## Database Auto Backup
-
 sudo chown -R $USER:$USER /home/akgroup
 sudo chmod -R 755 /home/akgroup
 
@@ -82,12 +78,58 @@ sudo a2dissite 000-default.conf
 sudo systemctl restart apache2
 sudo systemctl status apache2
 
+##DATABASES
 
-CREATE USER 'akgroup'@'localhost' IDENTIFIED BY 'mbol (# $ ! % & etc...)1';
+### Create Database
+To enter mysql, type:
+```
+mysql
+```
+To create a database:
+```
+CREATE DATABASE database_name;
+```
 
-GRANT ALL PRIVILEGES ON akfood.* TO 'akgroup'@'localhost';
-
+### Create Databse User
+Create User:
+```
+CREATE USER 'user_name'@'localhost' IDENTIFIED BY 'password';
+```
+Access to specific Database:
+```
+GRANT ALL PRIVILEGES ON database_name.* TO 'user_name'@'localhost';
+```
+Access to All databases:
+```
 GRANT ALL PRIVILEGES ON * . * TO 'akgroup'@'localhost';
+```
+Flush Access:
+```
 FLUSH PRIVILEGES;
+```
 
-mysql -u akgroup -p akfood < /home/akgroup/akhalalfood.com/20222803_backup.sql
+### Database Backup & Restore
+To Backup
+```
+mysqldump -u akgroup --password=EzfowYLVqmtetsJP akfood | gzip > /home/akgroup/backup/backup_$(date +%F.%H%M%S)_akfood.sql.gz
+```
+To Restore
+```
+mysqldump -u akgroup --password=EzfowYLVqmtetsJP akfood | gzip < /home/akgroup/backup/backup_$(date +%F.%H%M%S)_akfood.sql.gz
+```
+
+### Database Auto Backup
+Open Crontab by Nano:
+``
+sudo crontab -e
+``
+Add this line:
+```
+mysqldump -u akgroup --password=EzfowYLVqmtetsJP akfood | gzip > /home/akgroup/backup/backup_$(date +%F.%H%M%S)_akfood.sql.gz
+```
+
+## Email Setup
+To check Ubuntu Version
+```
+lsb_release -a
+```
