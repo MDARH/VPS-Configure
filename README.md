@@ -11,7 +11,9 @@
 
 ## Create Swam Memory
 At first, you need to check if your system already has a swap space. Access your server with an SSH client and write the following command.
+``
 free -m
+``
 ## Domain Add to Apache
 ## Create Database
 ## Create Databse User
