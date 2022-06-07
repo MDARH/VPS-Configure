@@ -134,3 +134,8 @@ To check Ubuntu Version
 ```
 lsb_release -a
 ```
+
+## Mysql Command
+```
+SHOW DATABASES;
+```
