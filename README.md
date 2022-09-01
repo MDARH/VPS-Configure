@@ -139,3 +139,6 @@ lsb_release -a
 ```
 SHOW DATABASES;
 ```
+```
+SELECT User, Host FROM mysql.user;
+```
